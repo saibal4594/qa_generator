@@ -132,15 +132,16 @@ class QGPipeline:
     def _prepare_inputs_for_qg_from_answers_hl(self, sents, answers):
         inputs = []
         for i, answer in enumerate(answers):
-            if len(answer) == 0: continue
+            if len(answer) == 0:
+                continue
             for answer_text in answer:
                 sent = sents[i]
                 sents_copy = sents[:]
                 
                 answer_text = answer_text.strip()
-                try:
+                
+                if answer_text in sent:
                     ans_start_idx = sent.index(answer_text)
-                    
                     sent = f"{sent[:ans_start_idx]} <hl> {answer_text} <hl> {sent[ans_start_idx + len(answer_text): ]}"
                     sents_copy[i] = sent
                     
@@ -150,10 +151,7 @@ class QGPipeline:
                         source_text = source_text + " </s>"
                     
                     inputs.append({"answer": answer_text, "source_text": source_text})
-                except ValueError:
-                # Handle the case where answer_text is not found in sent
-                    pass
-        
+            
         return inputs
     
     def _prepare_inputs_for_qg_from_answers_prepend(self, context, answers):

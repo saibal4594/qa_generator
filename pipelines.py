@@ -132,26 +132,25 @@ class QGPipeline:
     def _prepare_inputs_for_qg_from_answers_hl(self, sents, answers):
         inputs = []
         for i, answer in enumerate(answers):
-            if len(answer) == 0:
-                continue
+            if len(answer) == 0: continue
             for answer_text in answer:
                 sent = sents[i]
                 sents_copy = sents[:]
                 
                 answer_text = answer_text.strip()
                 
-                if answer_text in sent:
-                    ans_start_idx = sent.index(answer_text)
-                    sent = f"{sent[:ans_start_idx]} <hl> {answer_text} <hl> {sent[ans_start_idx + len(answer_text): ]}"
-                    sents_copy[i] = sent
-                    
-                    source_text = " ".join(sents_copy)
-                    source_text = f"generate question: {source_text}" 
-                    if self.model_type == "t5":
-                        source_text = source_text + " </s>"
-                    
-                    inputs.append({"answer": answer_text, "source_text": source_text})
-            
+                ans_start_idx = sent.index(answer_text)
+                
+                sent = f"{sent[:ans_start_idx]} <hl> {answer_text} <hl> {sent[ans_start_idx + len(answer_text): ]}"
+                sents_copy[i] = sent
+                
+                source_text = " ".join(sents_copy)
+                source_text = f"generate question: {source_text}" 
+                if self.model_type == "t5":
+                    source_text = source_text + " </s>"
+                
+                inputs.append({"answer": answer_text, "source_text": source_text})
+        
         return inputs
     
     def _prepare_inputs_for_qg_from_answers_prepend(self, context, answers):
@@ -308,7 +307,7 @@ SUPPORTED_TASKS = {
 
 def pipeline(
     task: str,
-    model: Optional[str] = None,
+    model: [str] = None,
     tokenizer: Optional[Union[str, PreTrainedTokenizer]] = None,
     qg_format: Optional[str] = "highlight",
     ans_model: Optional[str] = None,

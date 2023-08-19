@@ -3,7 +3,7 @@ import logging
 from typing import Optional, Dict, Union
 
 from nltk import sent_tokenize
-
+from transformers import AutoModelForSeq2SeqLM
 import torch
 from transformers import(
     AutoModelForSeq2SeqLM, 
@@ -138,8 +138,10 @@ class QGPipeline:
                 sents_copy = sents[:]
                 
                 answer_text = answer_text.strip()
-                
-                ans_start_idx = sent.index(answer_text)
+                try:
+                    ans_start_idx = sent.index(answer_text)
+                except ValueError:
+                    print("value not found")
                 
                 sent = f"{sent[:ans_start_idx]} <hl> {answer_text} <hl> {sent[ans_start_idx + len(answer_text): ]}"
                 sents_copy[i] = sent

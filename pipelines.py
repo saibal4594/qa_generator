@@ -139,7 +139,8 @@ class QGPipeline:
                 
                 answer_text = answer_text.strip()
                 try:
-                    ans_start_idx = sent.index(answer_text)
+                    ans_start_idx = sent.startswith(answer_text)
+                    ans_start_idx = sent.index(ans_start_idx)
                 except ValueError:
                     print("value not found")
                 

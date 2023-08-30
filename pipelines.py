@@ -223,7 +223,7 @@ class E2EQGPipeline:
         
         self.default_generate_kwargs = {
             "max_length": 256,
-            "num_beams": 4,
+            "num_beams": 20,
             "length_penalty": 1.5,
             "no_repeat_ngram_size": 3,
             "early_stopping": True,
